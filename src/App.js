@@ -3,6 +3,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProgressBarComp from './ProgressBarComp';
 import React, {useState, useEffect, useRef} from 'react';
+import Gameloop from './Gameloop';
 
 function App() {
 
@@ -13,6 +14,8 @@ function App() {
   const [energySpeed, setEnergySpeed] = useState(10)
   const [energyBars, setEnergyBars] = useState(1)
   const [spentEnergy, setSpentEnergy] = useState(0)
+  const [playerHealth, setPlayerHealth] = useState(100)
+  const [enemyHealth, setEnemyHealth] = useState(1)
 
   const intervalRef = useRef(null)
 
@@ -74,8 +77,11 @@ function App() {
         <p>{energy} Energy</p>
         <ProgressBarComp value={increment} variant="success" />
         <p>Energy Cap: {energyCap}</p>
-        <button className='spend-btn' onClick={spendEnergy}>Spend Energy</button>
-        {spentEnergy >= 4 && <p>{spentEnergy}</p>}
+        <button className='spend-btn' onClick={spendEnergy}>Spend Energy</button>       
+      </div>
+
+      <div>
+        <Gameloop/>
       </div>
     </div>
   );
