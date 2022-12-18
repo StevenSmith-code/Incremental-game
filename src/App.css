@@ -13,12 +13,12 @@ p{
   display: flex;
 }
 
-.bar-container{
+/* .bar-container{
   max-width: 30vw;
   
   border: 1px black solid;
   padding: 10px;
-}
+} */
 
 .spend-btn{
   background-color: rgba(128, 128, 128, 0.291);
