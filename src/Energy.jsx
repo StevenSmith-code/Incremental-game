@@ -1,19 +1,17 @@
 import React, { useState } from 'react'
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ProgressBarComp from './ProgressBarComp';
+import ProgressBar from 'react-bootstrap/ProgressBar';
 import { useEffect } from 'react';
 function Energy() {
 
   const [energy, setEnergy] = useState({
     currentEnergy: 1,
-    accumulativeEnergy: 1,
-    energyCap: 100,
     energySpeed: 1,
     energyMultiplier: 1,
   })
 
-  const shop =[]
+  const [shop, setShop] = useState([]);
   const buttons =[]
 
   const format = amount =>{
@@ -25,36 +23,39 @@ function Energy() {
 
 
   const energyGenerator = () =>{
-
-    if(energy.accumulativeEnergy === energy.energyCap) return
+    
 
     setEnergy(prev => ({...prev,
     
-    currentEnergy: prev.currentEnergy += energy.energySpeed * energy.energyMultiplier,
-    accumulativeEnergy: prev.accumulativeEnergy += energy.energySpeed * energy.energyMultiplier,
+    currentEnergy: Math.floor(prev.currentEnergy + shop[0].amount * shop[0].multi),
     
     }))
   }
 
   const buyGenerator = i =>{
-    let g = shop[i - 1]
+    let g = shop[i]
     if(g.cost > energy.currentEnergy) return
     energy.currentEnergy -= g.cost
+    g.amount += 1
     g.bought += 1
     g.multi *= 1.05
     g.cost *= 1.5
 
     setEnergy(prev => ({...prev,
     
-    energyCap: Math.floor(prev.energyCap * g.multi)
+    energySpeed:prev.energySpeed *= g.multi
     }))
+
+    setShop([...shop])
+
   }
 
 
   for (let i = 0; i < 10; i++) {
   let generator = {
-    cost: Math.pow(10, i) * 10,
+    cost: Math.pow(Math.pow(10,i), i),
     bought: 0,
+    amount: 0,
     multi: 1
   }   
   shop.push(generator) 
@@ -62,8 +63,9 @@ function Energy() {
 
   for (let i = 0; i < 10; i++) {
    let g = shop[i]
-   buttons.push(<div key={i} className={"border-2 cursor-pointer"} onClick={()=> buyGenerator(i)}>
+   buttons.push(<div key={i} className={"border-2 cursor-pointer select-none "} onClick={()=> buyGenerator(i)}>
     <p>Energy Increase {i + 1}</p>
+    <p>Amount: {format(g.amount)}</p>
     <p>Cost: {format(g.cost)}</p>
     <p>Bought: {format(g.bought)}</p>
     <p>Multi: {format(g.multi)}</p>
@@ -88,8 +90,6 @@ function Energy() {
     <div className='w-auto h-auto border-r-2 p-4'>
 
         <p>{energy.currentEnergy} Energy</p>
-        <ProgressBarComp value={energy.currentEnergy} variant="success" />
-        <p>Energy Cap: {energy.energyCap}</p>
         {buttons}    
       </div>
   )
